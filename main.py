@@ -4,9 +4,9 @@ import sounddevice as sd
 class WaveGen():
     def __init__(self):
         self.sampleR = 48000 #Hz
-        self.wavefreq = 445 #Hz
-        self.amplitude = 0.3
-        self.duration = .3 #sec
+        self.wavefreq = 880 #Hz
+        self.amplitude = 0.2
+        self.duration = .20 #sec
 
     def short(self):
         num_samples_short = int(self.sampleR*self.duration)
@@ -24,7 +24,8 @@ class WaveGen():
         return wave_long
     
     def silence(self):
-        num_samples_silence = int(self.sampleR*self.duration*2)
+        duration_silence = self.duration * 0.05
+        num_samples_silence = int(self.sampleR*self.duration)
         silence_array = np.zeros((num_samples_silence, 1), dtype=np.float32)
         return silence_array
 
@@ -42,7 +43,7 @@ def morse_dict():
     return MORSE_DICT
 
 def message():
-    msg = input('Write a message to see it in morse code:\n')
+    msg = input('Write a message to see it in morse code(type exit to quit):\n')
     return msg
 
 wavegen = WaveGen()
@@ -54,24 +55,25 @@ silence = wavegen.silence()
 # msg = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 
 morse = morse_dict()
-
-msg = message()
-msg = msg.replace('.','').replace(',','').upper()
-
-morse_msg = [morse[C] for C in msg if C in morse]
-print('This is your morse code message:')
-for morse_char in morse_msg:
-    print(morse_char, end=' ')
-
-print("\nLet's play it back! Hear...")
-for morse_char in morse_msg:
-    for morse_pulse in morse_char:
-        if morse_pulse == '.':
-            sd.play(shortwave, samplerate=samplerate)
-            sd.wait()
-        elif morse_pulse == ' ':
-            sd.play(silence, samplerate=samplerate)
-            sd.wait()
-        else:
-            sd.play(longwave, samplerate=samplerate)
-            sd.wait()
+while True:
+    msg = message()
+    msg = msg.replace('.','').replace(',','').upper()
+    if msg.upper().strip() == 'EXIT': break
+    morse_msg = [morse[C] for C in msg if C in morse]
+    print('Playing back your morse code message:')
+    for morse_char in morse_msg:
+        print(morse_char, end=' ')
+    print('')
+    for morse_char in morse_msg:
+        for morse_pulse in morse_char:
+            if morse_pulse == '.':
+                sd.play(shortwave, samplerate=samplerate)
+                sd.wait()
+            elif morse_pulse == ' ':
+                sd.play(silence, samplerate=samplerate)
+                sd.wait()
+            else:
+                sd.play(longwave, samplerate=samplerate)
+                sd.wait()
+                sd.play(silence, samplerate=samplerate)
+                sd.wait()
