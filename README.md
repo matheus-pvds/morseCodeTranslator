@@ -1,5 +1,9 @@
 # Morse Code Translator — Audio Tone Generator
 
+![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-013243?logo=numpy&logoColor=white)
+![SoundDevice](https://img.shields.io/badge/SoundDevice-0.5-00ADD8?logo=python&logoColor=white)
+
 A Python program that converts text messages to **Morse code** and plays the corresponding **audio tones** (sine wave beeps) through the computer's speakers.
 
 ## Features
